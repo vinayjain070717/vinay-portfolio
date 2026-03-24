@@ -10,6 +10,15 @@ function sanitizeForFilename(str: string): string {
   return str.replace(/[^a-zA-Z0-9.-]/g, "_").replace(/_+/g, "_");
 }
 
+function getServiceClient() {
+  if (!isSupabaseConfigured || !process.env.SUPABASE_SERVICE_ROLE_KEY) return null;
+  const { createClient } = require("@supabase/supabase-js");
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+}
+
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
@@ -29,36 +38,51 @@ export async function POST(request: NextRequest) {
 
     if (isSupabaseConfigured) {
       const supabase = await createServerSupabaseClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      if (supabase) {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (!user) {
+          return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
       }
 
-      const timestamp = Date.now();
-      const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_");
+      const serviceClient = getServiceClient();
+      if (!serviceClient) {
+        return NextResponse.json(
+          { error: "Storage not configured" },
+          { status: 503 }
+        );
+      }
+
       let filePath: string;
-
-      if (uploadType === "project-media" && projectTitle) {
+      if (uploadType === "resume") {
+        filePath = "resume/resume.pdf";
+      } else if (uploadType === "profile-photo") {
+        const ext = path.extname(file.name) || ".jpg";
+        filePath = `profile/profile-photo${ext}`;
+      } else if (uploadType === "project-media" && projectTitle) {
         const sanitizedTitle = sanitizeForFilename(projectTitle);
-        filePath = `projects/${sanitizedTitle}-${timestamp}-${sanitizedName}`;
+        const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_");
+        filePath = `projects/${sanitizedTitle}-${Date.now()}-${sanitizedName}`;
       } else {
-        filePath = `${user.id}/${timestamp}-${sanitizedName}`;
+        const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_");
+        filePath = `general/${Date.now()}-${sanitizedName}`;
       }
 
-      const { data, error } = await supabase.storage
+      const { data, error } = await serviceClient.storage
         .from("uploads")
         .upload(filePath, buffer, {
           contentType: file.type || "application/octet-stream",
-          upsert: false,
+          upsert: true,
         });
 
       if (error) {
+        console.error("Supabase upload error:", error);
         return NextResponse.json({ error: error.message }, { status: 500 });
       }
 
-      const { data: urlData } = supabase.storage
+      const { data: urlData } = serviceClient.storage
         .from("uploads")
         .getPublicUrl(data.path);
 
@@ -110,27 +134,53 @@ export async function POST(request: NextRequest) {
 export async function GET() {
   try {
     if (isSupabaseConfigured) {
-      const { createClient } = await import("@supabase/supabase-js");
-      const supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.SUPABASE_SERVICE_ROLE_KEY!
-      );
-      const { data: listData } = await supabase.storage
+      const serviceClient = getServiceClient();
+      if (!serviceClient) {
+        return NextResponse.json({ source: "supabase", resume: null, profilePhoto: null, projectMedia: [] });
+      }
+
+      let resumeUrl: string | null = null;
+      let profilePhotoUrl: string | null = null;
+      const projectMedia: string[] = [];
+
+      const { data: resumeList } = await serviceClient.storage
+        .from("uploads")
+        .list("resume", { limit: 1 });
+      if (resumeList && resumeList.length > 0 && resumeList[0].name) {
+        const { data: urlData } = serviceClient.storage
+          .from("uploads")
+          .getPublicUrl(`resume/${resumeList[0].name}`);
+        resumeUrl = urlData.publicUrl;
+      }
+
+      const { data: profileList } = await serviceClient.storage
+        .from("uploads")
+        .list("profile", { limit: 1 });
+      if (profileList && profileList.length > 0 && profileList[0].name) {
+        const { data: urlData } = serviceClient.storage
+          .from("uploads")
+          .getPublicUrl(`profile/${profileList[0].name}`);
+        profilePhotoUrl = urlData.publicUrl;
+      }
+
+      const { data: projectsList } = await serviceClient.storage
         .from("uploads")
         .list("projects", { limit: 500 });
-      const projectMedia: string[] = [];
-      if (listData) {
-        for (const item of listData) {
+      if (projectsList) {
+        for (const item of projectsList) {
           if (item.name) {
-            const { data: urlData } = supabase.storage
+            const { data: urlData } = serviceClient.storage
               .from("uploads")
               .getPublicUrl(`projects/${item.name}`);
             projectMedia.push(urlData.publicUrl);
           }
         }
       }
+
       return NextResponse.json({
         source: "supabase",
+        resume: resumeUrl,
+        profilePhoto: profilePhotoUrl,
         projectMedia,
       });
     }
@@ -176,30 +226,46 @@ export async function DELETE(request: NextRequest) {
   try {
     if (isSupabaseConfigured) {
       const supabase = await createServerSupabaseClient();
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      if (supabase) {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (!user) {
+          return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
       }
     }
 
     const { searchParams } = new URL(request.url);
     const url = searchParams.get("url");
     if (!url) {
-      return NextResponse.json({ error: "url parameter required" }, { status: 400 });
+      return NextResponse.json(
+        { error: "url parameter required" },
+        { status: 400 }
+      );
     }
 
     if (isSupabaseConfigured) {
-      const { createClient } = await import("@supabase/supabase-js");
-      const supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.SUPABASE_SERVICE_ROLE_KEY!
-      );
-      const match = url.match(/\/projects\/([^/?]+)$/) || url.match(/projects\/([^/?]+)$/);
+      const serviceClient = getServiceClient();
+      if (!serviceClient) {
+        return NextResponse.json(
+          { error: "Storage not configured" },
+          { status: 503 }
+        );
+      }
+      const match =
+        url.match(/\/projects\/([^/?]+)$/) ||
+        url.match(/projects\/([^/?]+)$/);
       if (!match) {
-        return NextResponse.json({ error: "Invalid project media URL" }, { status: 400 });
+        return NextResponse.json(
+          { error: "Invalid project media URL" },
+          { status: 400 }
+        );
       }
       const filePath = `projects/${match[1]}`;
-      const { error } = await supabase.storage.from("uploads").remove([filePath]);
+      const { error } = await serviceClient.storage
+        .from("uploads")
+        .remove([filePath]);
       if (error) {
         return NextResponse.json({ error: error.message }, { status: 500 });
       }
@@ -208,7 +274,10 @@ export async function DELETE(request: NextRequest) {
 
     const match = url.match(/^\/?projects\/([^/]+)$/);
     if (!match) {
-      return NextResponse.json({ error: "Invalid project media URL" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Invalid project media URL" },
+        { status: 400 }
+      );
     }
     const fileName = match[1];
     const filePath = path.join(process.cwd(), "public", "projects", fileName);
