@@ -9,6 +9,11 @@ export const experienceData: Omit<Experience, "id">[] = [
 - Built and optimized Kafka Streams / KSQL pipelines processing ~3M+ records
 - Improved observability and resilience using structured logging, metrics, alerts
 
+**AT&T OPENET CCS** (Java, Spring Boot, Microservices, REST, Oracle DB):
+- Worked on the Convergent Charging System for AT&T's real-time rating and billing
+- Developed and maintained microservices handling subscriber provisioning, rate plan management, and usage processing
+- Optimized batch processing and DB queries for high-volume transaction throughput
+
 **Metro-X Environment Management** (Node.js, Java, Spring Boot, Kafka, Docker, Kubernetes):
 - Contributed to internal environment management platform
 - Reduced manual environment setup and testing time from ~1 day to under 30 minutes

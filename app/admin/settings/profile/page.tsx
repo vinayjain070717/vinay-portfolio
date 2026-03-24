@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Toaster, toast } from "react-hot-toast";
 import { siteConfig } from "@/lib/site.config";
 import { cn } from "@/lib/utils";
-import { Loader2 } from "lucide-react";
+import { Loader2, Upload, Camera } from "lucide-react";
 
 const inputClass =
   "w-full bg-[var(--color-surface-light)] border border-[var(--color-surface-lighter)] rounded-lg px-4 py-2 text-[var(--color-text-primary)] focus:border-[var(--color-primary)] focus:outline-none";
@@ -30,6 +30,8 @@ function getDefaultForm() {
 export default function AdminProfileSettingsPage() {
   const [form, setForm] = useState(getDefaultForm);
   const [loading, setLoading] = useState(true);
+  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
+  const [photoUploading, setPhotoUploading] = useState(false);
 
   useEffect(() => {
     fetch("/api/profile")
@@ -55,7 +57,39 @@ export default function AdminProfileSettingsPage() {
       })
       .catch(() => toast.error("Failed to load profile"))
       .finally(() => setLoading(false));
+
+    fetch("/api/upload")
+      .then((r) => r.json())
+      .then((d) => { if (d.profilePhoto) setPhotoUrl(d.profilePhoto); })
+      .catch(() => {});
   }, []);
+
+  async function handlePhotoUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file");
+      return;
+    }
+    setPhotoUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      fd.append("type", "profile-photo");
+      const res = await fetch("/api/upload", { method: "POST", body: fd });
+      const data = await res.json();
+      if (data.success) {
+        setPhotoUrl(data.url);
+        toast.success("Profile photo updated!");
+      } else {
+        toast.error(data.error || "Upload failed");
+      }
+    } catch {
+      toast.error("Upload failed");
+    } finally {
+      setPhotoUploading(false);
+    }
+  }
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -92,6 +126,43 @@ export default function AdminProfileSettingsPage() {
         </h1>
 
         <form onSubmit={handleSave} className="space-y-6">
+          {/* Profile Photo */}
+          <div className="glass-card p-6 space-y-4">
+            <h2 className="text-lg font-semibold text-[var(--color-text-primary)] mb-4">
+              Profile Photo
+            </h2>
+            <div className="flex items-center gap-6">
+              <div className="relative w-24 h-24 rounded-full overflow-hidden bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-accent)] flex items-center justify-center border-2 border-[var(--color-primary)]">
+                {photoUrl ? (
+                  <img src={photoUrl} alt="Profile" className="w-full h-full object-cover" />
+                ) : (
+                  <span className="text-2xl font-bold text-white">VJ</span>
+                )}
+                <label className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 hover:opacity-100 transition-opacity cursor-pointer rounded-full">
+                  <input type="file" accept="image/*" onChange={handlePhotoUpload} className="hidden" />
+                  {photoUploading ? (
+                    <Loader2 className="h-6 w-6 text-white animate-spin" />
+                  ) : (
+                    <Camera className="h-6 w-6 text-white" />
+                  )}
+                </label>
+              </div>
+              <div>
+                <p className="text-[var(--color-text-primary)] font-medium">
+                  {photoUrl ? "Change Photo" : "Upload Photo"}
+                </p>
+                <p className="text-sm text-[var(--color-text-secondary)]">
+                  Click the photo or drag an image. This appears in the About section.
+                </p>
+                <label className="inline-flex items-center gap-2 mt-2 px-4 py-1.5 rounded-lg bg-[var(--color-primary)] text-white text-sm font-medium cursor-pointer hover:opacity-90 transition-opacity">
+                  <Upload className="h-4 w-4" />
+                  Browse
+                  <input type="file" accept="image/*" onChange={handlePhotoUpload} className="hidden" />
+                </label>
+              </div>
+            </div>
+          </div>
+
           <div className="glass-card p-6 space-y-4">
             <h2 className="text-lg font-semibold text-[var(--color-text-primary)] mb-4">
               Basic Info

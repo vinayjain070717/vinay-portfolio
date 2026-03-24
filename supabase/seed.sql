@@ -42,14 +42,25 @@ INSERT INTO skills (name, category, proficiency, icon_name, display_order) VALUE
 -- Experience
 INSERT INTO experience (company, role, description, start_date, end_date, is_current, location, display_order) VALUES
   ('Amdocs', 'Software Developer',
-   '**Metro-X R&D Project** (Node JS, Java, Spring Boot, Microservices, Kafka, Docker, Kubernetes):
-- Built complete middleware from scratch — Microservices layer as an intermediate between UI and various data sources
-- Conducted R&D across multiple accounts to develop tailored Microservices
-- Created an automated testing tool that reduced testing time from 1 day to under 30 minutes
+   '**AT&T OPENET Charging – CGF** (Java, Spring Boot, Kafka Streams, KSQL, Kubernetes, UNIX):
+- Backend developer on AT&T''s online charging system (CGF)
+- Built and optimized Kafka Streams / KSQL pipelines processing ~3M+ records
+- Improved observability and resilience using structured logging, metrics, alerts
 
-**Modernizing LESOG Project** (Java, Spring Boot, Azure, C++):
-- Modernized AT&T''s legacy order generator for the Southeast US region from legacy languages to Microservices architecture on Azure Cloud
-- Connected with interfaces like CSI, NSDB, SOCS and rewrote legacy logic into Java',
+**AT&T OPENET CCS** (Java, Spring Boot, Microservices, REST, Oracle DB):
+- Worked on the Convergent Charging System for AT&T''s real-time rating and billing
+- Developed and maintained microservices handling subscriber provisioning, rate plan management, and usage processing
+- Optimized batch processing and DB queries for high-volume transaction throughput
+
+**Metro-X Environment Management** (Node JS, Java, Spring Boot, Kafka, Docker, Kubernetes):
+- Contributed to internal environment management platform
+- Reduced manual environment setup and testing time from ~1 day to under 30 minutes
+- Worked with Kafka, Docker, Kubernetes, CI/CD
+
+**LESOG Order Generation** (Java, Spring Boot, Azure):
+- Led migration of legacy telecom order-generation to Spring Boot microservices on Azure
+- Designed integrations with CSI, NSDB, SOCS systems
+- Rebuilt critical file-based flows into fault-tolerant microservices',
    '2021-12-01', NULL, TRUE, 'Pune', 1),
   ('Tata Consultancy Services', 'Assistant System Engineer',
    '**ASOS Retail UK Project** (Java, Spring Boot, Hibernate, Mulesoft, Azure):
@@ -118,7 +129,7 @@ INSERT INTO journey_events (title, description, date, event_type, icon_name, dis
   ('Internship at Thinking Machines', 'Built a Centralized CMS Server and Home Automation system using Java, Spring Boot, and Android', '2020-01-01', 'career', 'Briefcase', 2),
   ('Graduated B.Tech', 'Completed B.Tech in Information Technology with 7.71 CGPA', '2020-07-01', 'education', 'Award', 3),
   ('Joined TCS', 'Started as Assistant System Engineer working on ASOS Retail UK Project', '2021-02-01', 'career', 'Briefcase', 4),
-  ('Joined Amdocs', 'Promoted to Software Developer, working on Metro-X R&D and LESOG modernization projects', '2021-12-01', 'career', 'Rocket', 5),
+  ('Joined Amdocs', 'Software Developer working on AT&T OPENET Charging (CGF & CCS), Metro-X Environment Management, and LESOG Order Generation projects', '2021-12-01', 'career', 'Rocket', 5),
   ('HackerRank Gold Badges', 'Earned 5-star gold badges in Problem Solving, Java, Python, and C++', '2022-01-01', 'achievement', 'Trophy', 6);
 
 -- Social Links
