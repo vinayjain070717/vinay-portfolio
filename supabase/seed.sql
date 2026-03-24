@@ -11,7 +11,7 @@ INSERT INTO profiles (full_name, title, bio, email, phone, location, linkedin_ur
   'Pune, Maharashtra, India',
   'https://linkedin.com/in/vinayjain703',
   'https://github.com/vinayjain070717',
-  'https://hackerrank.com/profile/monu9425'
+  'https://www.hackerrank.com/profile/monu94259'
 );
 
 -- Skills
@@ -84,26 +84,26 @@ INSERT INTO projects (title, description, long_description, tech_stack, github_u
 
 -- Certificates (Badges)
 INSERT INTO certificates (title, issuer, description, credential_url, display_order, type, star_rating) VALUES
-  ('Problem Solving', 'HackerRank', '5 Star Gold Badge', 'https://hackerrank.com/profile/monu9425', 1, 'badge', 5),
-  ('C++', 'HackerRank', '5 Star Gold Badge', 'https://hackerrank.com/profile/monu9425', 2, 'badge', 5),
-  ('Java', 'HackerRank', '5 Star Gold Badge', 'https://hackerrank.com/profile/monu9425', 3, 'badge', 5),
-  ('Python', 'HackerRank', '5 Star Gold Badge', 'https://hackerrank.com/profile/monu9425', 4, 'badge', 5),
-  ('30 Days of Code', 'HackerRank', 'Gold Badge', 'https://hackerrank.com/profile/monu9425', 5, 'badge', 5),
-  ('10 Days of JS', 'HackerRank', 'Silver Badge', 'https://hackerrank.com/profile/monu9425', 6, 'badge', 3),
-  ('SQL', 'HackerRank', '4 Star Silver Badge', 'https://hackerrank.com/profile/monu9425', 7, 'badge', 4),
-  ('C Language', 'HackerRank', 'Silver Badge', 'https://hackerrank.com/profile/monu9425', 8, 'badge', 3),
-  ('Ruby', 'HackerRank', '3 Star Bronze Badge', 'https://hackerrank.com/profile/monu9425', 9, 'badge', 3);
+  ('Problem Solving', 'HackerRank', '5 Star Gold Badge', 'https://www.hackerrank.com/profile/monu94259', 1, 'badge', 5),
+  ('C++', 'HackerRank', '5 Star Gold Badge', 'https://www.hackerrank.com/profile/monu94259', 2, 'badge', 5),
+  ('Java', 'HackerRank', '5 Star Gold Badge', 'https://www.hackerrank.com/profile/monu94259', 3, 'badge', 5),
+  ('Python', 'HackerRank', '5 Star Gold Badge', 'https://www.hackerrank.com/profile/monu94259', 4, 'badge', 5),
+  ('30 Days of Code', 'HackerRank', 'Gold Badge', 'https://www.hackerrank.com/profile/monu94259', 5, 'badge', 5),
+  ('10 Days of JS', 'HackerRank', 'Silver Badge', 'https://www.hackerrank.com/profile/monu94259', 6, 'badge', 3),
+  ('SQL', 'HackerRank', '4 Star Silver Badge', 'https://www.hackerrank.com/profile/monu94259', 7, 'badge', 4),
+  ('C Language', 'HackerRank', 'Silver Badge', 'https://www.hackerrank.com/profile/monu94259', 8, 'badge', 3),
+  ('Ruby', 'HackerRank', '3 Star Bronze Badge', 'https://www.hackerrank.com/profile/monu94259', 9, 'badge', 3);
 
 -- Certificates (Skill Certificates)
 INSERT INTO certificates (title, issuer, description, credential_url, display_order, type) VALUES
-  ('Python (Basic)', 'HackerRank', 'Verified Skill Certificate', 'https://hackerrank.com/profile/monu9425', 10, 'certificate'),
-  ('Problem Solving (Basic)', 'HackerRank', 'Verified Skill Certificate', 'https://hackerrank.com/profile/monu9425', 11, 'certificate'),
-  ('C++ (Basic)', 'HackerRank', 'Verified Skill Certificate', 'https://hackerrank.com/profile/monu9425', 12, 'certificate'),
-  ('SQL (Basic)', 'HackerRank', 'Verified Skill Certificate', 'https://hackerrank.com/profile/monu9425', 13, 'certificate'),
-  ('C (Basic)', 'HackerRank', 'Verified Skill Certificate', 'https://hackerrank.com/profile/monu9425', 14, 'certificate'),
-  ('C (Intermediate)', 'HackerRank', 'Verified Skill Certificate', 'https://hackerrank.com/profile/monu9425', 15, 'certificate'),
-  ('JavaScript (Basic)', 'HackerRank', 'Verified Skill Certificate', 'https://hackerrank.com/profile/monu9425', 16, 'certificate'),
-  ('Java (Basic)', 'HackerRank', 'Verified Skill Certificate', 'https://hackerrank.com/profile/monu9425', 17, 'certificate');
+  ('Python (Basic)', 'HackerRank', 'Verified Skill Certificate', 'https://www.hackerrank.com/certificates/0254079a3ad5', 10, 'certificate'),
+  ('Problem Solving (Basic)', 'HackerRank', 'Verified Skill Certificate', 'https://www.hackerrank.com/certificates/5087c7b2eb80', 11, 'certificate'),
+  ('C++ (Basic)', 'HackerRank', 'Verified Skill Certificate', 'https://www.hackerrank.com/certificates/e35f03737c42', 12, 'certificate'),
+  ('SQL (Basic)', 'HackerRank', 'Verified Skill Certificate', 'https://www.hackerrank.com/certificates/e47df1b7beec', 13, 'certificate'),
+  ('C (Basic)', 'HackerRank', 'Verified Skill Certificate', 'https://www.hackerrank.com/certificates/8983168e31c2', 14, 'certificate'),
+  ('C (Intermediate)', 'HackerRank', 'Verified Skill Certificate', 'https://www.hackerrank.com/certificates/7d2e0df4bc11', 15, 'certificate'),
+  ('JavaScript (Basic)', 'HackerRank', 'Verified Skill Certificate', 'https://www.hackerrank.com/certificates/20a5a858d689', 16, 'certificate'),
+  ('Java (Basic)', 'HackerRank', 'Verified Skill Certificate', 'https://www.hackerrank.com/certificates/c28c882dd580', 17, 'certificate');
 
 -- Services
 INSERT INTO services (title, description, icon_name, display_order) VALUES
@@ -125,7 +125,7 @@ INSERT INTO journey_events (title, description, date, event_type, icon_name, dis
 INSERT INTO social_links (platform_name, url, icon_name, display_order, is_visible) VALUES
   ('LinkedIn', 'https://linkedin.com/in/vinayjain703', 'Linkedin', 1, TRUE),
   ('GitHub', 'https://github.com/vinayjain070717', 'Github', 2, TRUE),
-  ('HackerRank', 'https://hackerrank.com/profile/monu9425', 'Code2', 3, TRUE),
+  ('HackerRank', 'https://www.hackerrank.com/profile/monu94259', 'Code2', 3, TRUE),
   ('Email', 'mailto:vinayomjain@gmail.com', 'Mail', 4, TRUE);
 
 -- Site Config defaults

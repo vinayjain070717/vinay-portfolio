@@ -56,7 +56,7 @@ My toolbox includes Java, Spring Boot, Spring Cloud, Microservices, Kafka, Kafka
     location: "Pune, Maharashtra, India",
     linkedinUrl: "https://linkedin.com/in/vinayjain703",
     githubUrl: "https://github.com/vinayjain070717",
-    hackerrankUrl: "https://hackerrank.com/profile/monu9425",
+    hackerrankUrl: "https://hackerrank.com/profile/monu94259",
     githubAvatarUrl: "https://github.com/vinayjain070717.png",
     resumeDownloadFilename: "Vinay_Jain_Resume.pdf",
   },
